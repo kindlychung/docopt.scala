@@ -3,6 +3,8 @@ package org.docopt
 import io.Source
 import com.twitter.json.Json
 
+import scala.collection.mutable
+
 object Tester extends App {
   val testCases = Source.fromURL(getClass.getResource("/testcases.docopt"))
                         .getLines()
@@ -13,13 +15,17 @@ object Tester extends App {
   val testFilter = if (args.length > 0) { x:Integer => testSet.contains(x) }
                    else {x:Integer => true}
 
-  testCases.split("r\"\"\"").zipWithIndex.filter({case (t, x) => testFilter(x)}).foreach {
+  var total = 0
+  var failed = new mutable.HashSet[Int]
+
+  // the first split is empty, that's why we drop(1)
+  testCases.split("r\"\"\"").zipWithIndex.filter({case (t, x) => testFilter(x)}).drop(1).foreach {
     case (testRun, index) =>
       testRun.split("\"\"\"") match {
         case Array(doc, body) =>
-          body.trim.split("\\$ ").filterNot(_ == "").map
-          {
-            case testCase => {
+          total += 1
+          body.trim.split("\\$ ").filterNot(_ == "").foreach {
+            case testCase =>
               val Array(argv_, tmp@_*) = testCase.trim.split("\n")
               val expectedResultString = tmp.mkString("\n")
               val Array("prog", argv@_*) = argv_.split(" ")
@@ -27,6 +33,7 @@ object Tester extends App {
                 val expectedResult = Json.build(Json.parse(expectedResultString))
                 val result = Json.build(Docopt(doc, argv.toArray))
                 if (result != expectedResult) {
+                  failed += index
                   println("===== %d: FAILED =====".format(index))
                   println("\"\"\"" + doc + "\"\"\"")
                   println(argv_)
@@ -35,6 +42,7 @@ object Tester extends App {
                 }
               } catch {
                 case _:Throwable =>
+                  failed += index
                   if (expectedResultString != "\"user-error\"") {
                     println("===== %d: BAD JSON =====".format(index))
                     println("\"\"\"" + doc + "\"\"\"")
@@ -43,10 +51,8 @@ object Tester extends App {
                     println("expected> " + expectedResultString + "\n")
                   }
               }
-            }
           }
-        case _ =>
       }
-    case _ =>
   }
+  print(s"Total: $total, failed: ${failed.size}")
 }

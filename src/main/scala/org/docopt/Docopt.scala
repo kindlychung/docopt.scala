@@ -2,7 +2,7 @@ package org.docopt
 
 import org.docopt.pattern._
 
-import collection.mutable.{HashMap, Map}
+import scala.collection.mutable
 import org.docopt.pattern.Option
 import org.docopt.pattern.Command
 import org.docopt.pattern.Argument
@@ -21,13 +21,13 @@ object Docopt {
             argv: Array[String],
             help: Boolean = true,
             version: String = "",
-            optionsFirst: Boolean = false): Map[String, Any] = {
+            optionsFirst: Boolean = false): mutable.Map[String, Any] = {
     val collected = PatternParser.docopt(usage, argv.filter(_ != ""), help, version, optionsFirst)
-    val tupled:Seq[(String, Any)] = collected.map(pattern => pattern match {
+    val tupled:Seq[(String, Any)] = collected.map {
       case o@Option(l,s,a,value:Value) => (o.name ,extractValue(value))
       case Argument(name,value:Value) => (name, extractValue(value))
       case Command(name,value:Value) => (name, extractValue(value))
-    })
-    HashMap(tupled:_*)
+    }
+    mutable.HashMap(tupled:_*)
   }
 }

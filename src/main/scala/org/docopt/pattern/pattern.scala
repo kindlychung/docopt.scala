@@ -28,7 +28,7 @@ case class AnyOptions(children: List[Pattern]) extends Pattern with ParentPatter
 case class OneOrMore(children: List[Pattern]) extends Pattern with ParentPattern
 case class Either(children: List[Pattern]) extends Pattern with ParentPattern
 
-// Use for syntastic sugar
+// Use for syntactic sugar
 object Required {def apply(children: Pattern*) = new Required(children.toList)}
 object Optional {def apply(children: Pattern*) = new Optional(children.toList)}
 object AnyOptions {def apply(children: Pattern*) = new AnyOptions(children.toList)}

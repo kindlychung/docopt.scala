@@ -1,15 +1,32 @@
-# ``docopt.scala`` is a JVM implementation of docopt
+# docopt2
 
-`docopt http://docopt.org/` language definition can be found on the official webpage.
+[docopt](http://docopt.org/) language definition can be found on the official webpage.
 
 [![Build Status](https://travis-ci.org/cllu/docopt.scala.svg?branch=develop)](https://travis-ci.org/cllu/docopt.scala)
 
 ## Usage
 
-- For a scala example, see ``src/test/scala/org/docopt/Testee.scala`` and
-  ``src/test/scripts/testee``
-- For a java example, see ``src/test/java/org/docopt/NavalFate.java`` and
-  ``src/test/scripts/naval_fate``
+```scala
+object Main {
+  val doc =
+    """Usage:
+      |  Main [--force] EXPR
+    """.stripMargin
+
+  def main(_args: Array[String]) {
+    val args = try {
+      Docopt(doc, _args)
+    } catch {
+      case e: Exception =>
+        print(doc)
+        sys.exit(-1)
+    }
+
+    val experimentFolder = opt.get("EXPR").get.asInstanceOf[String]
+    val force = args.getOrElse("--force", false)
+  }
+}
+```
 
 ## Installation
 
@@ -22,4 +39,4 @@ libraryDependencies += "com.chunlianglyu.docopt2" %% "docopt2" % "0.1"
 
 ## Tests Coverage
 
-The current coverage is 150/164 language agnostic tests.
+Currently 42/81 language agnostic tests are passed. We do not support `options` section yet.
