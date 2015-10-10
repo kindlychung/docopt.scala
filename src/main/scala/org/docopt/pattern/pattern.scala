@@ -14,6 +14,10 @@ trait ParentPattern {def children: List[Pattern]}
 abstract class Pattern
 case class Argument(name: String, value: Value = NullValue()) extends Pattern with ChildPattern
 case class Command(name: String, value: Value = BooleanValue(value = false)) extends Pattern with ChildPattern
+
+/**
+ * An Option starts with single-dash or double dash, can have a short name and a long name, can optionally have arguments
+ */
 case class Option(short: String,
                   long: String,
                   count: Int = 0,

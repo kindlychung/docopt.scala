@@ -6,7 +6,8 @@ import com.twitter.json.Json
 import scala.collection.mutable
 
 object Tester extends App {
-  val testCases = Source.fromURL(getClass.getResource("/testcases.docopt"))
+
+  val testCases = Source.fromInputStream(getClass.getResourceAsStream("/testcases.docopt"))
                         .getLines()
                         .filterNot(_.startsWith("#"))
                         .mkString("\n")
@@ -27,13 +28,15 @@ object Tester extends App {
           body.trim.split("\\$ ").filterNot(_ == "").foreach {
             case testCase =>
               val Array(argv_, tmp@_*) = testCase.trim.split("\n")
-              val expectedResultString = tmp.mkString("\n")
+              // some test case has a comment starting with #
+              val expectedResultString = tmp.mkString("\n").split("#").head.trim
+
               val Array("prog", argv@_*) = argv_.split(" ")
               try {
                 val expectedResult = Json.build(Json.parse(expectedResultString))
                 val result = Json.build(Docopt(doc, argv.toArray))
                 if (result != expectedResult) {
-                  failed += index
+                  failed.add(index)
                   println("===== %d: FAILED =====".format(index))
                   println("\"\"\"" + doc + "\"\"\"")
                   println(argv_)
@@ -41,9 +44,9 @@ object Tester extends App {
                   println("expected> " + expectedResult + "\n")
                 }
               } catch {
-                case _:Throwable =>
-                  failed += index
+                case e:Throwable =>
                   if (expectedResultString != "\"user-error\"") {
+                    failed.add(index)
                     println("===== %d: BAD JSON =====".format(index))
                     println("\"\"\"" + doc + "\"\"\"")
                     println(argv_)
@@ -54,5 +57,8 @@ object Tester extends App {
           }
       }
   }
-  print(s"Total: $total, failed: ${failed.size}")
+
+  println(s"Total: $total, failed: ${failed.size}")
+  println(s"Failed tests: $failed")
+
 }

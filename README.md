@@ -23,7 +23,7 @@ object Main {
     }
 
     val experimentFolder = opt.get("EXPR").get.asInstanceOf[String]
-    val force = args.getOrElse("--force", false)
+    val force = args.getOrElse("--force", false).asInstanceOf[Boolean]
   }
 }
 ```
@@ -39,4 +39,4 @@ libraryDependencies += "com.chunlianglyu.docopt2" %% "docopt2" % "0.1"
 
 ## Tests Coverage
 
-Currently 42/81 language agnostic tests are passed. We do not support `options` section yet.
+Currently 75/81 docopt tests are passed.
