@@ -11,7 +11,7 @@ object Testee extends App {
   val input = Source.fromInputStream(System.in)
   val doc = input.getLines().mkString("\n")
   try {
-    println(Json.build(Docopt(doc, args)))
+    println(Json.build(Docopt(doc, args).asMap))
   }
   catch {
     case _:Throwable => println("\"user-error\"")

@@ -14,16 +14,10 @@ object Main {
     """.stripMargin
 
   def main(_args: Array[String]) {
-    val args = try {
-      Docopt(doc, _args)
-    } catch {
-      case e: Exception =>
-        print(doc)
-        sys.exit(-1)
-    }
+    val args = Docopt(doc, _args)
 
-    val experimentFolder = opt.get("EXPR").get.asInstanceOf[String]
-    val force = args.getOrElse("--force", false).asInstanceOf[Boolean]
+    val experimentFolder = opt.getString("EXPR").get
+    val force = args.getBoolean("--force", false)
   }
 }
 ```
@@ -34,7 +28,7 @@ The library is published to my own maven repo, add the following to your sbt bui
 
 ```scala
 resolvers += "Chunliang's Maven Repository" at "https://repo.chunlianglyu.com"
-libraryDependencies += "com.chunlianglyu.docopt2" %% "docopt2" % "0.1"
+libraryDependencies += "com.chunlianglyu.docopt2" %% "docopt2" % "0.2"
 ```
 
 ## Tests Coverage

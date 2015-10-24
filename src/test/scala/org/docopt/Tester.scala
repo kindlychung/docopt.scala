@@ -34,7 +34,7 @@ object Tester extends App {
               val Array("prog", argv@_*) = argv_.split(" ")
               try {
                 val expectedResult = Json.build(Json.parse(expectedResultString))
-                val result = Json.build(Docopt(doc, argv.toArray))
+                val result = Json.build(Docopt(doc, argv.toArray).asMap)
                 if (result != expectedResult) {
                   failed.add(index)
                   println("===== %d: FAILED =====".format(index))
