@@ -67,7 +67,7 @@ object Docopt {
       case e: Exception =>
         if (exitOnException) {
           println(usage)
-          sys.exit(-1)
+          sys.exit(0)
         } else {
           throw e
         }
