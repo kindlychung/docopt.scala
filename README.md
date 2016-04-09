@@ -31,6 +31,14 @@ resolvers += "Chunliang's Maven Repository" at "https://repo.chunlianglyu.com"
 libraryDependencies += "com.chunlianglyu.docopt2" %% "docopt2" % "0.2"
 ```
 
+Or use 0.2.2 on jitpack:
+
+```
+resolvers += "jitpack" at "https://jitpack.io"
+
+libraryDependencies += "com.github.kindlychung" % "docopt.scala" % "0.2.2"	
+```
+
 ## Tests Coverage
 
 Currently 75/81 docopt tests are passed.
