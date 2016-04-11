@@ -14,25 +14,28 @@ class Docopt(map: Map[String, Any]) {
   def asMap = map
 
   def getInt(key: String): SOption[Int] = map.get(key) match {
+    case Some(null) => None
     case Some(v) => Some(v.asInstanceOf[Int])
     case None => None
   }
   def getInt(key: String, default: Int): Int = map.getOrElse(key, default).asInstanceOf[Int]
 
   def getBoolean(key: String): SOption[Boolean] = map.get(key) match {
-    case Some(v) => Some(v.asInstanceOf[Boolean])
     case None => None
+    case Some(null) => None
+    case Some(v) => Some(v.asInstanceOf[Boolean])
   }
   def getBoolean(key: String, default: Boolean): Boolean = map.getOrElse(key, default).asInstanceOf[Boolean]
 
   def getString(key: String): SOption[String] = map.get(key) match {
-    case Some(v) => Some(v.asInstanceOf[String])
     case None => None
+    case Some(null) => None
+    case Some(v) => Some(v.asInstanceOf[String])
   }
   def getString(key: String, default: String): String = map.getOrElse(key, default).asInstanceOf[String]
 
   def getStrings(key: String): Seq[String] = map.get(key) match {
-    case Some(v: Array[String]) => v
+    case Some(v: Array[String]) => v.toSeq
     case _ => Seq()
   }
 

@@ -5,7 +5,7 @@ object Build extends Build {
 
   val Organization = "com.chunlianglyu.docopt2"
   val Name = "docopt2"
-  val Version = "0.2"
+  val Version = "0.2.3"
   val ScalaVersion = "2.11.7"
 
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
